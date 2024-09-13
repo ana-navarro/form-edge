@@ -13,7 +13,6 @@ const router = Router();
 
 router.post('/adicionar', authMiddleware, criarUsuarioController);
 router.post('/:formularioId/adicionar-respondente', authMiddleware, criarUsuarioRespondenteController);
-
 router.delete('/deletar', authMiddleware, deletarUsuarioController);
 router.put('/update-VISUALIZACAO/:usuarioId/formularios/:formularioId', authMiddleware, editarUsuarioVisualizacao);
 router.put('/update-EDICAO/:usuarioId/formularios/:formularioId', authMiddleware, editarUsuarioEdicao);
