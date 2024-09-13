@@ -12,3 +12,5 @@ router.post('/:formularioId/questao/:questaoId/resposta/adicionar', authMiddlewa
 router.delete('/:formularioId/questao/:questaoId/resposta/:respostaId/delete', authMiddleware, deletarRespostaController);
 router.put('/:formularioId/questao/:questaoId/resposta/:respostaId/editar', authMiddleware, deletarRespostaController);
 router.get('/:formularioId/questao/:questaoId/resposta', authMiddleware, listarRespostaController);
+
+export default router;

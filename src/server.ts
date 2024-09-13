@@ -7,6 +7,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import formularioRoutes from './routes/formulario.routes'
 import usuarioRoutes from './routes/usuario.routes'
 import authRoutes from './routes/auth.routes'
+import respostaRoutes from './routes/resposta.routes'
 
 const app = express();
 
@@ -52,5 +53,6 @@ app.get("*", (req: Request, res: Response) => {
 app.use('/api/formulario', formularioRoutes);
 app.use('/api/usuario', usuarioRoutes);
 app.use('/api', authRoutes);
+app.use('/api/formulario/respostas/', respostaRoutes);
 
 export default app;
