@@ -4,7 +4,7 @@ import { CriarUsuarioInput } from "./usuario.types";
 import bcrypt from 'bcrypt';
 
 export const criarUsuario = async (dados: CriarUsuarioInput): Promise<ServiceResponse> => {
-    const { nome, email, senha, confirmarSenha } = dados;
+    const { nome, email, senha, confirmarSenha, acesso } = dados;
 
     try {
         if (senha !== confirmarSenha) {
@@ -29,8 +29,7 @@ export const criarUsuario = async (dados: CriarUsuarioInput): Promise<ServiceRes
             nome,
             email,
             senha: senhaHashed,
-            tipoAcesso: 'RESPONDENTE',
-            acessoFormularios: []
+            acesso,
         });
 
         return {
@@ -39,7 +38,7 @@ export const criarUsuario = async (dados: CriarUsuarioInput): Promise<ServiceRes
         };
     } catch (error) {
         return {
-            error,
+            error: 'Erro ao criar o usuário',
             status: 500
         };
     }

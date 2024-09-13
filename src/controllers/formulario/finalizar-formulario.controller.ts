@@ -14,6 +14,13 @@ export const finalizarFormularioController = async (req: Request, res: Response)
     const emailUsuario = loggedUser.email;
 
     try {
+        if (!loggedUser.acesso.some((acesso) => { acesso.tipoAcesso === 'ADMIN' && acesso.acessoFormularios === null })) {
+            if (!loggedUser.acesso.some((acesso) => { acesso.tipoAcesso === 'EDICAO' && acesso.acessoFormularios === formularioId })) {
+                return res.status(403).json({ msg: 'Permissão negada. Apenas usuários com tipo de acesso EDICAO podem editar outros usuários.' });
+            }
+            return res.status(403).json({ msg: 'Permissão negada. Apenas usuários com tipo de acesso ADMIN podem editar outros usuários.' });
+        }
+
         if (!Types.ObjectId.isValid(formularioId)) {
             return res.status(400).json({ error: 'ID do formulário inválido' });
         }

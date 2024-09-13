@@ -7,7 +7,7 @@ import { finalizarFormularioController } from "../controllers/formulario/finaliz
 const router = Router();
 
 router.post('/criar', authMiddleware, criarFormularioController);
-router.post('/editar', authMiddleware, editarFormularioController);
+router.post('/editar/:id', authMiddleware, editarFormularioController);
 router.post('/finalizar', authMiddleware, finalizarFormularioController);
 
 export default router;

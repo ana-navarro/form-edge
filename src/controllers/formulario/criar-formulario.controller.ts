@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import Formulario from '../../schemas/formulario.schema';
+import Usuario from '../../schemas/usuario.schema'; 
 import { criarQuestao } from '../../services/questao/criar-questao.service';
 
 export const criarFormularioController = async (req: Request, res: Response): Promise<Response> => {
@@ -12,6 +13,10 @@ export const criarFormularioController = async (req: Request, res: Response): Pr
     }
 
     const emailUsuario = loggedUser.email;
+
+    if (!loggedUser.acesso.some((acesso) => { acesso.tipoAcesso === 'ADMIN' && acesso.acessoFormularios === null })) {
+        return res.status(401).json({ msg: 'Usuário não tem permissão para criar formulários' });
+    }
 
     try {
         const formularioId = (await Formulario.create({ questoes: [], finalizado: false, email: emailUsuario })).id;
@@ -32,11 +37,26 @@ export const criarFormularioController = async (req: Request, res: Response): Pr
         const questaoResponse = await criarQuestao(enunciado, numAlternativas, alternativas);
         
         if (questaoResponse.status !== 201) {
-            return res.status(questaoResponse.status).json({ error: questaoResponse.error  });
+            return res.status(questaoResponse.status).json({ error: questaoResponse.error });
         }
 
         formulario.questoes.push(questaoResponse.data.id);
         await formulario.save();
+
+        if (!loggedUser.acesso.some((acesso) => { acesso.tipoAcesso === 'ADMIN' && acesso.acessoFormularios === null })) {
+            await Usuario.findByIdAndUpdate(
+                loggedUser._id,
+                {
+                    $push: {
+                        acesso: {
+                            tipoAcesso: 'EDICAO',
+                            acessoFormularios: formularioId
+                        }
+                    }
+                },
+                { new: true }
+            );
+        }
 
         return res.status(201).json({
             message: 'Questão criada e adicionada ao formulário com sucesso',

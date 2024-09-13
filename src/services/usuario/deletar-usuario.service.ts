@@ -1,11 +1,10 @@
 import { Types } from 'mongoose';
 import Usuario from '../../schemas/usuario.schema';
 import { ServiceResponse } from '../../models/service-response.model';
-import bcrypt from 'bcrypt';
 import { DeletarUsuarioInput } from './usuario.types';
 
 export const deletarUsuario = async (dados: DeletarUsuarioInput): Promise<ServiceResponse> => {
-    const { usuarioId, tipoAcesso } = dados;
+    const { usuarioId, acesso } = dados;
 
     try {
         if (!Types.ObjectId.isValid(usuarioId)) {
@@ -23,10 +22,10 @@ export const deletarUsuario = async (dados: DeletarUsuarioInput): Promise<Servic
             };
         }
 
-        if (tipoAcesso !== 'ADMIN') {
+        if (acesso.tipoAcesso !== 'ADMIN') {
             return {
-                error: 'O usuario nao possui permissao para deletar usuarios',
-                status: 400
+                error: 'O usuário não possui permissão para deletar outros usuários',
+                status: 403
             };
         }
 
@@ -38,7 +37,7 @@ export const deletarUsuario = async (dados: DeletarUsuarioInput): Promise<Servic
         };
     } catch (error) {
         return {
-            error,
+            error: 'Erro ao deletar o usuário',
             status: 500
         };
     }

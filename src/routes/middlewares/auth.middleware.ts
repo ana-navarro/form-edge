@@ -1,12 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { Acesso } from '../../models/acesso.model';
 
 dotenv.config();
 
 export interface JwtPayload {
     _id: string;
-    tipoAcesso: 'ADMIN' | 'RESPONDENTE' | 'VISUALIZACAO';
+    acesso: Acesso[];
     email: string;
 }
 
